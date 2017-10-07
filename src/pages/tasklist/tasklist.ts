@@ -12,11 +12,6 @@ export class TaskListPage {
   tasks: FirebaseListObservable<any[]>;
 
   constructor(public navCtrl: NavController, public af: AngularFireDatabase, public dialogs: Dialogs) {
-
-    this.tasks = af.list('/tasks');
-  }
-
-  addItem() {
     this.dialogs.prompt('Add a task', 'Ionic2Do', ['Ok', 'Cancel'], '').then(
       theResult => {
         if ((theResult.buttonIndex == 1) && (theResult.input1 !== '')) {
@@ -24,6 +19,14 @@ export class TaskListPage {
         }
       }
     )
+    this.tasks = af.list('/tasks');
+  }
+
+  addItem() {
+    let theNewTask: string = prompt("New Task");
+    if (theNewTask !='') {
+      this.tasks.push({title:theNewTask, status:'open'});
+    }
   }
   markAsDone(slidingItem: ItemSliding, task: any) {
     this.tasks.update(task.$key, {status: 'done'});
